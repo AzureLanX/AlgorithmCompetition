@@ -7,44 +7,40 @@ import java.util.Scanner;
  * @BelongsPackage: 哈希表.AcWing.字符串哈希_841
  * @Author: JuferBlue
  * @CreateTime: 2025-01-12  17:20
- * @Description: https://www.acwing.com/problem/content/842/
+ * @Description: https://www.acwing.com/activity/content/problem/content/891/
  * @Version: 1.0
  */
 
-//开放寻址法
 public class Main {
-    static int N = 200003;
-    static int nulls = 0x3f3f3f3f;
-    static int[] h = new int[N];
+    static int N = 100010;
+    static int P = 131;
+    static long[] h = new long[N];//存放hash的前缀值
+    static long[] p = new long[N];//存放p的次方
+    public static long getHash(int l,int r){
+        return h[r]-h[l-1]*p[r-l+1];
+    }
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         int n = sc.nextInt();
-        for(int i = 0;i<N;i++){
-            h[i] = nulls;
+        int m = sc.nextInt();
+        String s = sc.next();
+        p[0] = 1;//特殊处理
+        //初始化前缀和哈希值
+        for(int i = 1;i<=n;i++){
+            p[i] = p[i-1]*P;
+            h[i] = h[i-1]*P+s.charAt(i-1);
         }
-        while(n-->0){
-            String op = sc.next();
-            int x = sc.nextInt();
-            int k = find(x);
-            if(op.equals("I")){
-                h[k]  = x;
+        while(m-->0){
+            int l1 = sc.nextInt();
+            int r1 = sc.nextInt();
+            int l2 = sc.nextInt();
+            int r2 = sc.nextInt();
+            if(getHash(l1,r1)==getHash(l2,r2)) {
+                System.out.println("Yes");
             }else{
-                if(h[k] == nulls){
-                    System.out.println("No");
-                }else{
-                    System.out.println("Yes");
-                }
+                System.out.println("No");
             }
         }
 
-    }
-
-    public static int find(int x){
-        int k = (x%N+N)%N;
-        while(h[k]!=nulls && h[k]!=x){
-            k++;
-            if(k==N) k = 0;
-        }
-        return k;
     }
 }
